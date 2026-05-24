@@ -43,15 +43,19 @@ WORKDIR /var/www/html
 # Copy Laravel app
 COPY . .
 
+# Create a minimal .env for build time only
+RUN cp .env.example .env && php artisan key:generate
+
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
-# Run artisan package discovery after install
+# Run package discovery
 RUN php artisan package:discover --ansi || true
 
 # Install frontend dependencies and build assets
 RUN npm install && npm run build
 
+# Clear caches
 RUN php artisan config:clear || true
 RUN php artisan route:clear || true
 RUN php artisan view:clear || true
