@@ -44,7 +44,10 @@ WORKDIR /var/www/html
 COPY . .
 
 # Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+
+# Run artisan package discovery after install
+RUN php artisan package:discover --ansi || true
 
 # Install frontend dependencies and build assets
 RUN npm install && npm run build
