@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libpng-dev \
     zip \
+    nodejs \
+    npm \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip mbstring xml \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -18,21 +20,19 @@ RUN apt-get update && apt-get install -y \
 # Enable Apache rewrite
 RUN a2enmod rewrite
 
-# Make Apache use port 10000 (Render default)
+# Change Apache port to 10000
 RUN sed -i 's/Listen 80/Listen 10000/g' /etc/apache2/ports.conf
 RUN sed -i 's/<VirtualHost \*:80>/<VirtualHost *:10000>/g' /etc/apache2/sites-available/000-default.conf
 
-# Set Laravel public as document root
+# Set Laravel public folder as document root
 RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf
-RUN sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
 
-# Allow .htaccess for Laravel
-RUN printf '<Directory /var/www/html/public>\nAllowOverride All\nRequire all granted\n</Directory>\n' > /etc/apache2/conf-available/laravel.conf \
+# Allow .htaccess
+RUN printf '<Directory /var/www/html/public>\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>\n' > /etc/apache2/conf-available/laravel.conf \
     && a2enconf laravel
-
-# Install Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -40,39 +40,44 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy Laravel app
+# Copy composer files first
+COPY composer.json composer.lock ./
+
+# Install PHP dependencies FIRST
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Copy the rest of the project
 COPY . .
 
-# Create a minimal .env for build time only
-RUN cp .env.example .env && php artisan key:generate
+# Create .env
+RUN cp .env.example .env
 
-# Install PHP dependencies
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+# Generate Laravel key
+RUN php artisan key:generate
 
-# Run package discovery
-RUN php artisan package:discover --ansi || true
+# Install frontend dependencies
+RUN npm install
 
-# Install frontend dependencies and build assets
-RUN npm install && npm run build
+# Build assets
+RUN npm run build
+
+# Storage link
+RUN php artisan storage:link || true
 
 # Clear caches
 RUN php artisan config:clear || true
 RUN php artisan route:clear || true
 RUN php artisan view:clear || true
 
-# Create storage symlink
-RUN php artisan storage:link || true
-
 # Fix permissions
-RUN mkdir -p storage/framework/cache storage/framework/sessions \
-    storage/framework/views bootstrap/cache public/uploads \
-    && chown -R www-data:www-data storage bootstrap/cache public/uploads \
-    && chmod -R 775 storage bootstrap/cache public/uploads
+RUN mkdir -p storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
-# Run migrations
-RUN php artisan migrate --force || true
-
-# Expose port
+# Expose Render port
 EXPOSE 10000
 
 # Start Apache
