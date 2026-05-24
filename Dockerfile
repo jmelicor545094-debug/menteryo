@@ -50,7 +50,8 @@ RUN cp .env.example .env || true
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
 
 # Generate app key
-RUN php artisan key:generate || true
+RUN php artisan optimize:clear || true
+RUN chmod -R 775 storage bootstrap/cache
 
 # Run Laravel package discovery manually
 RUN php artisan package:discover --ansi || true
