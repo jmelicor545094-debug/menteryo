@@ -222,12 +222,11 @@
 
         /* ===== RIGHT FORM PANEL ===== */
         .form-panel {
-            width: 520px;
+            width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 48px;
-            flex-shrink: 0;
         }
 
         .login-card {
@@ -505,40 +504,8 @@
 
     <div class="login-wrapper">
 
-        {{-- LEFT BRANDING --}}
-        <div class="brand-panel">
-            <div class="brand-badge">
-                <div class="brand-badge-dot"></div>
-                <span class="brand-badge-text">Secure Portal</span>
-            </div>
 
-            <h1 class="brand-title">
-                Cemetery<br><span class="accent">Management</span><br>System
-            </h1>
 
-            <p class="brand-desc">
-                A comprehensive platform for managing burial records, plot allocations, and administrative operations with precision and care.
-            </p>
-
-            <div class="brand-features">
-                <div class="feature">
-                    <div class="feature-icon purple">📋</div>
-                    <span class="feature-label">Burial & Deceased Records</span>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon gold">🗺️</div>
-                    <span class="feature-label">Plot Allocation & Mapping</span>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon blue">💳</div>
-                    <span class="feature-label">Payment Tracking</span>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon green">🔒</div>
-                    <span class="feature-label">Role-Based Access Control</span>
-                </div>
-            </div>
-        </div>
 
         {{-- RIGHT FORM --}}
         <div class="form-panel">
