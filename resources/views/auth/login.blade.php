@@ -106,13 +106,12 @@
 
         /* RIGHT PANEL */
         .right-panel {
-            width: 480px;
+            width: 100%;
             background: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 48px;
-            flex-shrink: 0;
         }
         .login-box {
             width: 100%;
@@ -257,41 +256,7 @@
 </head>
 <body>
 
-    {{-- LEFT PANEL --}}
-    <div class="left-panel">
-        <div class="left-logo">
-            <div class="left-logo-title">⚜ Cemetery Management</div>
-            <div class="left-logo-sub">System</div>
-        </div>
 
-        <div class="left-center">
-            <div class="left-big-text">
-                Manage with<br><span>Care & Precision</span>
-            </div>
-            <div class="left-desc">
-                A secure and organized platform for managing burial records, plot allocation, and payment transactions with ease.
-            </div>
-        </div>
-
-        <div class="left-features">
-            <div class="feature-item">
-                <div class="feature-dot"></div>
-                <div class="feature-text">Burial & Deceased Records Management</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-dot"></div>
-                <div class="feature-text">Cemetery Plot Allocation & Tracking</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-dot"></div>
-                <div class="feature-text">Payment Transaction Monitoring</div>
-            </div>
-            <div class="feature-item">
-                <div class="feature-dot"></div>
-                <div class="feature-text">Role-Based Access Control</div>
-            </div>
-        </div>
-    </div>
 
     {{-- RIGHT PANEL --}}
     <div class="right-panel">
