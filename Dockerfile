@@ -52,9 +52,9 @@ RUN php artisan package:discover --ansi || true
 # Install frontend dependencies and build assets
 RUN npm install && npm run build
 
-RUN php artisan config:clear \
-    && php artisan route:clear \
-    && php artisan view:clear
+RUN php artisan config:clear || true
+RUN php artisan route:clear || true
+RUN php artisan view:clear || true
 
 # Create storage symlink
 RUN php artisan storage:link || true
