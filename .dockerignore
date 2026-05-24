@@ -1,5 +1,49 @@
-node_modules
-vendor
+# Version control
 .git
+.gitattributes
+.gitignore
+
+# Dependencies (rebuilt inside the container)
+vendor
+node_modules
+
+# Environment files (set via Render dashboard)
 .env
-npm-debug.log
+.env.backup
+.env.production
+
+# IDE / Editor
+.idea
+.vscode
+*.swp
+*.swo
+.editorconfig
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Testing
+tests
+phpunit.xml
+.phpunit.result.cache
+
+# Docker files (no need to copy themselves)
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# Documentation
+README.md
+docs
+
+# Storage logs (generated at runtime)
+storage/logs/*
+
+# Compiled assets (rebuilt in Docker build)
+public/build
+public/hot
